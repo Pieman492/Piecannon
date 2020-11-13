@@ -6,33 +6,29 @@ import discord4j.core.event.domain.lifecycle.ReadyEvent;
 import discord4j.core.event.domain.message.MessageCreateEvent;
 import discord4j.core.object.entity.Message;
 import discord4j.core.object.entity.User;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.util.Scanner;
 
 public class bot {
 
-    // Object oriented code. Bad! I started auto piloting, this isn't reactive!
-
-    /*
-    static boolean isBotCommand (String message) {
-        if (message.startsWith("ι")) {
-            return true;
-        } else {
-            return false;
-        }
-    }
-    static Message generateResponse(String inputCommand) {
-        Message outputMessage = new Message();
-        switch (inputCommand.substring(1).toLowerCase()) {
-            case "ping":
-
-        }
-    }
-    */
     public static void main (String[] args) {
-        // Command prefix
-        // final char commandFlag = 'ι';
+
+        // Object oriented pull of AI token from file. Currently using a dev file.
+        String token = "";
+        try {
+            FileInputStream tokenInput = new FileInputStream("src/main/resources/APIToken");
+            Scanner tokenScanner = new Scanner(tokenInput);
+            token = tokenScanner.nextLine();
+            tokenInput.close();
+            tokenScanner.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
 
         // Establish connection
-        GatewayDiscordClient client = DiscordClientBuilder.create(APIToken.token)
+        GatewayDiscordClient client = DiscordClientBuilder.create(token)
                 .build()
                 .login()
                 .block();
@@ -41,7 +37,7 @@ public class bot {
         client.getEventDispatcher().on(ReadyEvent.class)
                 .subscribe(event -> {
                     User self = event.getSelf();
-                    System.out.println(String.format("Logged in as %s#%s", self.getUsername(), self.getDiscriminator()));
+                    System.out.printf("Logged in as %s#%s%n", self.getUsername(), self.getDiscriminator());
                 });
 
         // Funny command that took way too long to understand

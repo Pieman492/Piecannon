@@ -1,4 +1,2 @@
-com/Pieman492/APIToken.java
- com.Pieman492.APIToken
 com/Pieman492/bot.java
  com.Pieman492.bot
