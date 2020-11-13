@@ -1,2 +1,0 @@
-com/Pieman492/bot.java
- com.Pieman492.bot
