@@ -6,29 +6,13 @@ import discord4j.core.event.domain.lifecycle.ReadyEvent;
 import discord4j.core.event.domain.message.MessageCreateEvent;
 import discord4j.core.object.entity.Message;
 import discord4j.core.object.entity.User;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.util.Scanner;
 
-public class bot {
+public class Piecannon {
 
     public static void main (String[] args) {
 
-        // Object oriented pull of AI token from file. Currently using a dev file.
-        String token = "";
-        try {
-            FileInputStream tokenInput = new FileInputStream("src/main/resources/APIToken");
-            Scanner tokenScanner = new Scanner(tokenInput);
-            token = tokenScanner.nextLine();
-            tokenInput.close();
-            tokenScanner.close();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-
         // Establish connection
-        GatewayDiscordClient client = DiscordClientBuilder.create(token)
+        GatewayDiscordClient client = DiscordClientBuilder.create(BotHelper.grabToken())
                 .build()
                 .login()
                 .block();
@@ -46,9 +30,10 @@ public class bot {
                 .filter(message -> message.getAuthor().map(user -> !user.isBot()).orElse(false))
                 .filter(message -> message.getContent().equalsIgnoreCase("!ping"))
                 .flatMap(Message::getChannel)
+                .delayElements(BotHelper.randomizedDelay(10,5)) // Randomized delay of 5-10 seconds
                 .flatMap(channel -> channel.createMessage("Pong!"))
                 .subscribe();
-
         client.onDisconnect().block();
+
     }
 }
