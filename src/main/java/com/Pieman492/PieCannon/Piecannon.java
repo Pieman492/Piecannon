@@ -1,6 +1,7 @@
-package com.Pieman492.PieCannon.core;
+package com.Pieman492.PieCannon;
 
 import com.Pieman492.PieCannon.commands.*;
+import com.Pieman492.PieCannon.core.ConnectionHandler;
 
 public class Piecannon {
 
@@ -9,6 +10,8 @@ public class Piecannon {
         ConnectionHandler connectionHandler = new ConnectionHandler();
         new Annoy(connectionHandler.getClient());
         new Ping(connectionHandler.getClient());
+
+        connectionHandler.getClient().onDisconnect().block();
 
     }
 }
