@@ -44,8 +44,8 @@ public final class BotHelper {
     }
 
     // Pattern: Ends with User Ping
-    private static final Pattern ENDS_WITH_USER_PING = Pattern.compile("<@!\\d{18}>");
-    public static Pattern getENDS_WITH_USER_PING() {
-        return ENDS_WITH_USER_PING;
-    }
+    public static final Pattern ENDS_WITH_USER_PING = Pattern.compile("<@!\\d{18}>");
+    // Pattern: Contains the deletion flag
+    public static final Pattern CONTAINS_DELETION_FLAG = Pattern.compile("\\Q[DeletionFlag]\\E");
 }
+
