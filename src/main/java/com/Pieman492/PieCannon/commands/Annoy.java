@@ -15,6 +15,7 @@ public final class Annoy extends RepeatingCommand {
     private final int pingDelayUpperBound = 30;
 
     public Annoy(GatewayDiscordClient client){
+
         setCommandPrefix();
         establishCommandStarter(client);
         establishCommandStopper(client);
@@ -22,10 +23,12 @@ public final class Annoy extends RepeatingCommand {
     }
 
     protected void setCommandPrefix() {
+
         this.commandPrefix = this.getCOMMAND_SYMBOL() + "annoy";
     }
 
     protected void establishCommandStarter(GatewayDiscordClient client) {
+
         client.getEventDispatcher().on(MessageCreateEvent.class)
             .map(MessageCreateEvent::getMessage)
             // Starts with !annoy
@@ -53,6 +56,7 @@ public final class Annoy extends RepeatingCommand {
     }
 
     protected void establishCommandStopper(GatewayDiscordClient client) {
+
         client.getEventDispatcher().on(MessageCreateEvent.class)
             .map(MessageCreateEvent::getMessage)
             .filter(message -> message.getContent().startsWith(commandPrefix + " stop")) // Starts with !annoy
@@ -65,6 +69,7 @@ public final class Annoy extends RepeatingCommand {
     }
 
     protected void establishCommandAgent(GatewayDiscordClient client) {
+
         Flux.interval(BotHelper.randomizedDelay(pingDelayUpperBound,pingDelayLowerBound))
         .filter(delay -> commandActive)
         .flatMap(channel -> commandChannel.createMessage("[DeletionFlag] <@!" + commandTargetId + ">"))
@@ -73,14 +78,17 @@ public final class Annoy extends RepeatingCommand {
     }
 
     private void setCommandActive(boolean flag) {
+
         commandActive = flag;
     }
 
     private void setCommandTargetId(String userId) {
+
         commandTargetId = userId;
     }
 
     private void setCommandChannel(MessageChannel channel) {
+
         commandChannel = channel;
     }
 
