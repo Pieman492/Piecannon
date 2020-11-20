@@ -7,13 +7,14 @@
  *  but for now they're here to clean up main()
  */
 
-package com.Pieman492;
+package com.Pieman492.PieCannon.core;
 
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.time.Duration;
 import java.util.Random;
 import java.util.Scanner;
+import java.util.regex.Pattern;
 
 public final class BotHelper {
 
@@ -42,4 +43,9 @@ public final class BotHelper {
         return Duration.ofSeconds(randomInt);
     }
 
+    // Pattern: Ends with User Ping
+    public static final Pattern ENDS_WITH_USER_PING = Pattern.compile("<@!\\d{18}>");
+    // Pattern: Contains the deletion flag
+    public static final Pattern CONTAINS_DELETION_FLAG = Pattern.compile("\\Q[DeletionFlag]\\E");
 }
+
