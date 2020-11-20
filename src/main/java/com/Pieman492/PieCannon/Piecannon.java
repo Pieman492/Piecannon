@@ -10,6 +10,7 @@ public class Piecannon {
         ConnectionHandler connectionHandler = new ConnectionHandler();
         new Annoy(connectionHandler.getClient());
         new Ping(connectionHandler.getClient());
+        new DeleteFlag(connectionHandler.getClient());
 
         connectionHandler.getClient().onDisconnect().block();
 
