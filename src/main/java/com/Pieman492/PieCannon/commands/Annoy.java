@@ -11,8 +11,8 @@ public final class Annoy extends RepeatingCommand {
     private String commandTargetId;
     private MessageChannel commandChannel;
     private boolean commandActive = false;
-    private final int pingDelayLowerBound = 2;
-    private final int pingDelayUpperBound = 5;
+    private final int pingDelayLowerBound = 15;
+    private final int pingDelayUpperBound = 30;
 
     public Annoy(GatewayDiscordClient client){
         setCommandPrefix();
@@ -23,46 +23,53 @@ public final class Annoy extends RepeatingCommand {
 
     protected void setCommandPrefix() {
         this.commandPrefix = this.getCOMMAND_SYMBOL() + "annoy";
-        System.out.println(commandPrefix);
     }
 
     protected void establishCommandStarter(GatewayDiscordClient client) {
-        System.out.println("Annoy establish starter method reached!");
         client.getEventDispatcher().on(MessageCreateEvent.class)
-            .filter(messageEvent -> messageEvent.getMessage().getContent().toLowerCase().startsWith(commandPrefix)) // Starts with !annoy
-            .filter(messageEvent -> BotHelper.getENDS_WITH_USER_PING().matcher(messageEvent.getMessage().getContent()).find()) // Ends with a user ping
-            .filter(messageEvent -> {
-                return messageEvent.getMessage().getAuthor().map(user -> !user.isBot()).orElse(false);
-            }) // User isn't a bot and exists
-            .map(messageEvent -> {
-                String targetSnowflake = messageEvent.getMessage().getContent();
+            .map(MessageCreateEvent::getMessage)
+            // Starts with !annoy
+            .filter(message -> message.getContent().toLowerCase().startsWith(commandPrefix))
+            // Ends with a user ping
+            .filter(message -> BotHelper.ENDS_WITH_USER_PING.matcher(message.getContent()).find())
+            // User both isn't a bot and exists
+            .filter(message -> message.getAuthor().map(user -> !user.isBot()).orElse(false))
+            // Doing the following is hacky and a violation of everything
+            // conventional about functional and reactive programming.
+            // Too bad!
+            .flatMap(message -> {
+                String targetSnowflake = message.getContent();
                 targetSnowflake = targetSnowflake.substring(targetSnowflake.lastIndexOf('!')+1, targetSnowflake.lastIndexOf('>'));
                 setCommandTargetId(targetSnowflake);
 
-                messageEvent.getMessage().getChannel()
+                message.getChannel()
                 .subscribe(this::setCommandChannel)
                 .dispose();
 
-                return true;
+                setCommandActive(true);
+                return message.delete();
             })
-            .subscribe(this::setCommandActive);
+            .subscribe();
     }
 
     protected void establishCommandStopper(GatewayDiscordClient client) {
-        System.out.println("Annoy establish stopper method reached!");
         client.getEventDispatcher().on(MessageCreateEvent.class)
-            .filter(messageEvent -> messageEvent.getMessage().getContent().startsWith(commandPrefix + " stop")) // Starts with !annoy
-            .filter(messageEvent -> messageEvent.getMessage().getAuthor().map(user -> !user.isBot()).orElse(false)) // User isn't a bot and exists
-            .map(messageEvent -> false)
-            .subscribe(this::setCommandActive);
+            .map(MessageCreateEvent::getMessage)
+            .filter(message -> message.getContent().startsWith(commandPrefix + " stop")) // Starts with !annoy
+            .filter(message -> message.getAuthor().map(user -> !user.isBot()).orElse(false)) // User isn't a bot and exists
+            .flatMap(message -> {
+                setCommandActive(false);
+                return message.delete();
+            })
+            .subscribe();
     }
 
     protected void establishCommandAgent(GatewayDiscordClient client) {
-        System.out.println("Annoy establish agent method reached!");
         Flux.interval(BotHelper.randomizedDelay(pingDelayUpperBound,pingDelayLowerBound))
-        .filter(delay ->  commandActive)
-        .flatMap(channel -> commandChannel.createMessage("<@!" + commandTargetId + ">"))
+        .filter(delay -> commandActive)
+        .flatMap(channel -> commandChannel.createMessage("[DeletionFlag] <@!" + commandTargetId + ">"))
         .subscribe();
+
     }
 
     private void setCommandActive(boolean flag) {
