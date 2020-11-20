@@ -44,7 +44,7 @@ public final class BotHelper {
     }
 
     // Pattern: Ends with User Ping
-    private static final Pattern ENDS_WITH_USER_PING = Pattern.compile("<@\\d{18}>\\Z");
+    private static final Pattern ENDS_WITH_USER_PING = Pattern.compile("<@!\\d{18}>");
     public static Pattern getENDS_WITH_USER_PING() {
         return ENDS_WITH_USER_PING;
     }
