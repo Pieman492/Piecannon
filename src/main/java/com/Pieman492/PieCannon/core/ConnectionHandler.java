@@ -7,6 +7,7 @@ import discord4j.core.object.entity.User;
 
 public class ConnectionHandler {
     private GatewayDiscordClient client;
+
     public ConnectionHandler() {
         // Establish connection
         client = DiscordClientBuilder.create(BotHelper.grabToken())
@@ -20,12 +21,6 @@ public class ConnectionHandler {
                 User self = event.getSelf();
                 System.out.printf("Logged in as %s#%s%n", self.getUsername(), self.getDiscriminator());
             });
-
-        /* I'm not totally sure but I believe this puts
-         * the bot in some kind of stasis when
-         * it goes offline so it can connect again.
-         */
-        client.onDisconnect().block();
 
     }
 
