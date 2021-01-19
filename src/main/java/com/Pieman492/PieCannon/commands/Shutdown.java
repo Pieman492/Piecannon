@@ -3,7 +3,7 @@ package com.Pieman492.PieCannon.commands;
 import discord4j.core.GatewayDiscordClient;
 import discord4j.core.event.domain.message.MessageCreateEvent;
 
-public class Shutdown extends Command {
+public final class Shutdown extends Command {
 
     public Shutdown(GatewayDiscordClient client) {
         setCommandPrefix();

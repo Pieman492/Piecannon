@@ -6,7 +6,7 @@ import discord4j.core.event.domain.message.MessageCreateEvent;
 import discord4j.core.event.domain.message.MessageUpdateEvent;
 import discord4j.core.object.entity.Message;
 
-public class DeleteFlag extends InternalCommand {
+public final class DeleteFlag extends InternalCommand {
 
     public DeleteFlag(GatewayDiscordClient client) {
         establishCommandAgent(client);
