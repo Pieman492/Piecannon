@@ -13,8 +13,8 @@ public class Piecannon {
         new InfoCommand(connectionHandler.getClient(), "help", "God helps those who help themselves.");
         new Annoy(connectionHandler.getClient());
         new FightGroovy(connectionHandler.getClient());
+        new Shutdown(connectionHandler.getClient());
 
         connectionHandler.getClient().onDisconnect().block();
-
     }
 }
