@@ -10,7 +10,7 @@ public class Piecannon {
         ConnectionHandler connectionHandler = new ConnectionHandler();
         new DeleteFlag(connectionHandler.getClient());
         new InfoCommand(connectionHandler.getClient(), "ping", "Pong!");
-        new InfoCommand(connectionHandler.getClient(), "help", "God helps those who help themselves!");
+        new InfoCommand(connectionHandler.getClient(), "help", "God helps those who help themselves.");
         new Annoy(connectionHandler.getClient());
         new FightGroovy(connectionHandler.getClient());
 

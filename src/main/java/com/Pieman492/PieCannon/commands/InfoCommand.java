@@ -4,9 +4,9 @@ import discord4j.core.GatewayDiscordClient;
 import discord4j.core.event.domain.message.MessageCreateEvent;
 import discord4j.core.object.entity.Message;
 
-public class InfoCommand extends Command{
-    String call;
-    String response;
+public final class InfoCommand extends Command{
+    private final String call;
+    private final String response;
 
     public InfoCommand(GatewayDiscordClient client, String call, String response){
         this.call = call;
