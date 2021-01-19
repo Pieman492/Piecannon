@@ -4,26 +4,31 @@ import discord4j.core.GatewayDiscordClient;
 import discord4j.core.event.domain.message.MessageCreateEvent;
 import discord4j.core.object.entity.Message;
 
-public class Ping extends Command {
+public class InfoCommand extends Command{
+    String call;
+    String response;
 
-    public Ping(GatewayDiscordClient client) {
+    public InfoCommand(GatewayDiscordClient client, String call, String response){
+        this.call = call;
+        this.response = response;
         setCommandPrefix();
         establishCommandAgent(client);
     }
 
+    @Override
     protected void setCommandPrefix() {
-        this.commandPrefix = this.getCOMMAND_SYMBOL() + "ping";
+        this.commandPrefix = COMMAND_SYMBOL + this.call;
     }
 
-    // Call-response test command, useful for diagnostics and the first command implemented!
+    @Override
     protected void establishCommandAgent(GatewayDiscordClient client) {
         client.getEventDispatcher().on(MessageCreateEvent.class)
                 .map(MessageCreateEvent::getMessage)
                 .filter(message -> message.getAuthor().map(user -> !user.isBot()).orElse(false))
-                .filter(message -> message.getContent().equalsIgnoreCase(commandPrefix))
+                .filter(message -> message.getContent().equalsIgnoreCase(this.commandPrefix))
                 .flatMap(Message::getChannel)
-                .flatMap(channel -> channel.createMessage("Pong!"))
+                .flatMap(channel -> channel.createMessage(this.response))
                 .subscribe();
+
     }
 }
-

@@ -23,19 +23,19 @@ public final class Annoy extends RepeatingCommand {
 
     protected void setCommandPrefix() {
 
-        this.commandPrefix = this.getCOMMAND_SYMBOL() + "annoy";
+        this.commandPrefix = COMMAND_SYMBOL + "annoy";
     }
 
     protected void establishCommandStarter(GatewayDiscordClient client) {
 
         client.getEventDispatcher().on(MessageCreateEvent.class)
             .map(MessageCreateEvent::getMessage)
+            // User both isn't a bot and exists
+            .filter(message -> message.getAuthor().map(user -> !user.isBot()).orElse(false))
             // Starts with !annoy
             .filter(message -> message.getContent().toLowerCase().startsWith(commandPrefix))
             // Ends with a user ping
             .filter(message -> BotHelper.USER_PING.matcher(message.getContent()).find())
-            // User both isn't a bot and exists
-            .filter(message -> message.getAuthor().map(user -> !user.isBot()).orElse(false))
             // Doing the following is hacky and a violation of everything
             // conventional about functional and reactive programming.
             // Too bad!
