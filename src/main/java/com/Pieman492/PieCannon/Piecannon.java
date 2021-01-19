@@ -8,9 +8,10 @@ public class Piecannon {
     public static void main(String[] args) {
 
         ConnectionHandler connectionHandler = new ConnectionHandler();
-        new Annoy(connectionHandler.getClient());
-        new Ping(connectionHandler.getClient());
         new DeleteFlag(connectionHandler.getClient());
+        new Ping(connectionHandler.getClient());
+        new Annoy(connectionHandler.getClient());
+        new FightGroovy(connectionHandler.getClient());
 
         connectionHandler.getClient().onDisconnect().block();
 

@@ -10,7 +10,6 @@ public final class Annoy extends RepeatingCommand {
 
     private String commandTargetId;
     private MessageChannel commandChannel;
-    private boolean commandActive = false;
     private final int pingDelayLowerBound = 15;
     private final int pingDelayUpperBound = 30;
 
@@ -34,7 +33,7 @@ public final class Annoy extends RepeatingCommand {
             // Starts with !annoy
             .filter(message -> message.getContent().toLowerCase().startsWith(commandPrefix))
             // Ends with a user ping
-            .filter(message -> BotHelper.ENDS_WITH_USER_PING.matcher(message.getContent()).find())
+            .filter(message -> BotHelper.USER_PING.matcher(message.getContent()).find())
             // User both isn't a bot and exists
             .filter(message -> message.getAuthor().map(user -> !user.isBot()).orElse(false))
             // Doing the following is hacky and a violation of everything
@@ -79,7 +78,7 @@ public final class Annoy extends RepeatingCommand {
 
     private void setCommandActive(boolean flag) {
 
-        commandActive = flag;
+        this.commandActive = flag;
     }
 
     private void setCommandTargetId(String userId) {
