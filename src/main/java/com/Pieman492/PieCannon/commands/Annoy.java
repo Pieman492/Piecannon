@@ -10,8 +10,6 @@ public final class Annoy extends RepeatingCommand {
 
     private String commandTargetId;
     private MessageChannel commandChannel;
-    private final int pingDelayLowerBound = 15;
-    private final int pingDelayUpperBound = 30;
 
     public Annoy(GatewayDiscordClient client){
 
@@ -22,7 +20,6 @@ public final class Annoy extends RepeatingCommand {
     }
 
     protected void setCommandPrefix() {
-
         this.commandPrefix = COMMAND_SYMBOL + "annoy";
     }
 
@@ -30,15 +27,12 @@ public final class Annoy extends RepeatingCommand {
 
         client.getEventDispatcher().on(MessageCreateEvent.class)
             .map(MessageCreateEvent::getMessage)
-            // User both isn't a bot and exists
-            .filter(message -> message.getAuthor().map(user -> !user.isBot()).orElse(false))
             // Starts with !annoy
             .filter(message -> message.getContent().toLowerCase().startsWith(commandPrefix))
             // Ends with a user ping
             .filter(message -> BotHelper.USER_PING.matcher(message.getContent()).find())
-            // Doing the following is hacky and a violation of everything
-            // conventional about functional and reactive programming.
-            // Too bad!
+            // User both isn't a bot and exists
+            .filter(message -> message.getAuthor().map(user -> !user.isBot()).orElse(false))
             .flatMap(message -> {
                 String targetSnowflake = message.getContent();
                 targetSnowflake = targetSnowflake.substring(targetSnowflake.lastIndexOf('!')+1, targetSnowflake.lastIndexOf('>'));
@@ -69,9 +63,11 @@ public final class Annoy extends RepeatingCommand {
 
     protected void establishCommandAgent(GatewayDiscordClient client) {
 
-        Flux.interval(BotHelper.randomizedDelay(pingDelayUpperBound,pingDelayLowerBound))
+        int pingDelayUpperBound = 30;
+        int pingDelayLowerBound = 15;
+        Flux.interval(BotHelper.randomizedDelay(pingDelayUpperBound, pingDelayLowerBound))
         .filter(delay -> commandActive)
-        .flatMap(channel -> commandChannel.createMessage("[DeletionFlag] <@!" + commandTargetId + ">"))
+        .flatMap(delay -> commandChannel.createMessage("[DeletionFlag] <@!" + commandTargetId + ">"))
         .subscribe();
 
     }
@@ -91,8 +87,4 @@ public final class Annoy extends RepeatingCommand {
         commandChannel = channel;
     }
 
-    @Override
-    public String toString() {
-        return "!annoy";
-    }
 }
