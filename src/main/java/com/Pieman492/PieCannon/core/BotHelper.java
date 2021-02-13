@@ -25,7 +25,7 @@ public final class BotHelper {
     public static String grabToken() {
         String token = "";
         try {
-            FileInputStream tokenInput = new FileInputStream("src/main/resources/APIToken");
+            FileInputStream tokenInput = new FileInputStream(System.getProperty("user.home") + "/.Piecannon/ApiToken");
             Scanner tokenScanner = new Scanner(tokenInput);
             token = tokenScanner.nextLine();
             tokenInput.close();
