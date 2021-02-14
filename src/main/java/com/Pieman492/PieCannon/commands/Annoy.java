@@ -20,6 +20,7 @@ public final class Annoy extends RepeatingCommand {
     }
 
     protected void setCommandPrefix() {
+
         this.commandPrefix = COMMAND_SYMBOL + "annoy";
     }
 
@@ -34,6 +35,7 @@ public final class Annoy extends RepeatingCommand {
             // User both isn't a bot and exists
             .filter(message -> message.getAuthor().map(user -> !user.isBot()).orElse(false))
             .flatMap(message -> {
+
                 String targetSnowflake = message.getContent();
                 targetSnowflake = targetSnowflake.substring(targetSnowflake.lastIndexOf('!')+1, targetSnowflake.lastIndexOf('>'));
                 setCommandTargetId(targetSnowflake);
