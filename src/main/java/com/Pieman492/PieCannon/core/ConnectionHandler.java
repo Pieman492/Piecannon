@@ -5,6 +5,9 @@ import discord4j.core.GatewayDiscordClient;
 import discord4j.core.event.domain.lifecycle.ReadyEvent;
 import discord4j.core.object.entity.User;
 
+/**
+ * Creates connection to API and outputs a log message to the console once connected.
+ */
 public class ConnectionHandler {
     private GatewayDiscordClient client;
 
